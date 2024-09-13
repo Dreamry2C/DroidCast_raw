@@ -54,17 +54,21 @@ class AnyRequestCallbackPreview : HttpServerRequestCallback {
     }
 
     private fun getScreenImage(
-        destWidth: Int,
-        destHeight: Int
+        width: Int,
+        height: Int
     ): ByteArrayOutputStream {
-        var bitmap: Bitmap? = ScreenCaptorUtils.screenshot(destWidth, destHeight)
-        Log.i("DroidCast_raw_log", "Bitmap generated with resolution $destWidth:$destHeight")
+        var destWidth = width
+        var destHeight = height
 
-        when (displayUtil?.getScreenRotation()) {
-            1 -> bitmap = bitmap.let { displayUtil?.rotateBitmap(bitmap!!, -90f) }!!
-            2 -> bitmap = bitmap.let { displayUtil?.rotateBitmap(bitmap!!, 90f) }!!
-            3 -> bitmap = bitmap.let { displayUtil?.rotateBitmap(bitmap!!, 180f) }!!
+        val screenRotation: Int? = displayUtil?.getScreenRotation()
+        if (screenRotation != null && screenRotation != 0 && screenRotation != 2) { // not portrait
+            val tmp = destWidth
+            destWidth = destHeight
+            destHeight = tmp
         }
+
+        val bitmap: Bitmap? = ScreenCaptorUtils.screenshot(destWidth, destHeight)
+        Log.i("DroidCast_raw_log", "Bitmap generated with resolution $destWidth:$destHeight")
 
         stream = ByteArrayOutputStream()
         bitmap!!.compress(Bitmap.CompressFormat.PNG, 100, stream)
