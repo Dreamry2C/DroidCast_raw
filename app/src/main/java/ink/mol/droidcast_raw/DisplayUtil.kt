@@ -2,8 +2,6 @@ package ink.mol.droidcast_raw
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.Matrix
 import android.graphics.Point
 import android.os.IBinder
 import android.util.Log
@@ -55,13 +53,5 @@ class DisplayUtil {
 //        println(">>> Screen rotation: $rotation")
         Log.i("DroidCast_raw_log", ">>> Screen rotation: $rotation")
         return rotation
-    }
-
-    fun rotateBitmap(bitmap: Bitmap, degree: Float): Bitmap {
-        val matrix = Matrix()
-        matrix.postRotate(degree)
-        return Bitmap.createBitmap(
-            bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true
-        )
     }
 }
